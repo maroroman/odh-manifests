@@ -6,6 +6,17 @@ metadata:
   name: jupyterhub-cluster
 rules:
   - verbs:
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
+    apiGroups:
+      - ''
+    resources:
+      - persistentvolumeclaims
+      - pods
+  - verbs:
       - get
       - watch
       - list
@@ -22,3 +33,5 @@ rules:
       - ''
     resources:
       - nodes
+      - pods
+      - events
