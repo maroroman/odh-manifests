@@ -23,6 +23,6 @@ spec:
           command:
             - jupyterhub-idle-culler
             - --timeout=259200  # 3 days
-            - --url=jupyterhub:8080/hub/api
+            - --url=jupyterhub:8081/hub/api
   triggers:
     - type: ConfigChange
