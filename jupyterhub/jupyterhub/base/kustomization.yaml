@@ -84,12 +84,5 @@ vars:
     apiVersion: v1
   fieldref:
     fieldpath: data.traefik_credentials_secret
-- name: jupyterhub_rds_secret
-  objref:
-    kind: ConfigMap
-    name: parameters
-    apiVersion: v1
-  fieldref:
-    fieldpath: data.jupyterhub_rds_secret
 configurations:
 - params.yaml
