@@ -1,7 +1,7 @@
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: odh-dashboard
+  name: rhods-dashboard
 rules:
   - apiGroups:
       - route.openshift.io
@@ -19,6 +19,42 @@ rules:
       - get
       - list
       - watch
+  - apiGroups:
+      - ''
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    resources:
+      - configmaps
+      - secrets
+  - apiGroups:
+      - batch
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    resources:
+      - cronjobs
+      - jobs
+      - jobs/status
+  - apiGroups:
+      - image.openshift.io
+    verbs:
+      - create
+      - get
+      - list
+      - patch
+    resources:
+      - imagestreams
   - apiGroups:
       - build.openshift.io
     verbs:
