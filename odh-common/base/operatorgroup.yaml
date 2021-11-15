@@ -3,3 +3,5 @@ kind: OperatorGroup
 metadata:
   name: opendatahub
 spec:
+  targetNamespaces:
+    - $(namespace)
