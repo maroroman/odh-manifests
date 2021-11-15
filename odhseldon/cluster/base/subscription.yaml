@@ -6,7 +6,7 @@ metadata:
 spec:
   channel: stable
   installPlanApproval: Automatic
-  name: seldon-operator-certified
-  source: certified-operators
+  name: seldon-deploy-operator-rhmp
+  source: redhat-marketplace
   sourceNamespace: openshift-marketplace
-  startingCSV: seldon-operator.v1.7.0
+  startingCSV: seldon-deploy-operator.v1.2.1
