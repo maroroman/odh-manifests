@@ -64,6 +64,18 @@ spec:
         component.opendatahub.io/name: jupyterhub
         opendatahub.io/component: 'true'
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - jupyterhub
+                topologyKey: topology.kubernetes.io/zone
       containers:
       - env:
         - name: NAMESPACE
@@ -141,7 +153,7 @@ spec:
             secretKeyRef:
               name: $(traefik_credentials_secret)
               key: TRAEFIK_API_PASSWORD
-        image: quay.io/odh-jupyterhub/jupyterhub-img:v0.3.3
+        image: quay.io/odh-jupyterhub/jupyterhub-img:v0.3.5
         imagePullPolicy: "Always"
         name: jupyterhub
         ports:
@@ -162,13 +174,38 @@ spec:
               port: 8081
             initialDelaySeconds: 15
             periodSeconds: 10
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - /opt/app-root/src/readinessProbe.sh
+          initialDelaySeconds: 40
+          periodSeconds: 10
       - name: jupyterhub-ha-sidecar
-        image: 'registry.redhat.io/openshift4/ose-leader-elector-rhel8:v4.7'
+        image: 'quay.io/opendatahub/leader-elector:v0.1'
+        volumeMounts:
+        - mountPath: /opt/app-root/src
+          name: sidecar-script
         args:
-          - '--election=jupyterhub-ha-election'
-          - '--election-namespace=$(NAMESPACE)'
-          - '--http=0.0.0.0:4040'
-          - '--id=$(POD_NAME)'
+          - '-node-id=$(POD_NAME)'
+          - '-namespace=$(NAMESPACE)'
+        readinessProbe:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - /opt/app-root/src/probe.sh
+            initialDelaySeconds: 15
+            periodSeconds: 10
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - /opt/app-root/src/probe.sh
+          initialDelaySeconds: 40
+          periodSeconds: 10
         env:
           - name: NAMESPACE
             valueFrom:
@@ -191,7 +228,7 @@ spec:
               key: POSTGRESQL_PASSWORD
         - name: JUPYTERHUB_DATABASE_HOST
           value: jupyterhub-db
-        image: quay.io/odh-jupyterhub/jupyterhub-img:v0.3.3
+        image: quay.io/odh-jupyterhub/jupyterhub-img:v0.3.5
         imagePullPolicy: "Always"
         name: wait-for-database
         resources:
@@ -203,9 +240,13 @@ spec:
             memory: 1Gi
       serviceAccountName: jupyterhub-hub
       volumes:
-      - configMap:
-          defaultMode: 420
-          name: jupyterhub-cfg
-        name: config
+      - name: config 
+        configMap:
+            defaultMode: 420
+            name: jupyterhub-cfg 
+      - name: sidecar-script
+        configMap:
+          defaultMode: 511
+          name: sidecar-probe
   triggers:
   - type: ConfigChange
