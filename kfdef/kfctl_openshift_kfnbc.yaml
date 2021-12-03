@@ -1,0 +1,60 @@
+apiVersion: kfdef.apps.kubeflow.org/v1
+kind: KfDef
+metadata:
+  clusterName: api-mroman-dev-datahub-redhat-com:6443
+  creationTimestamp: null
+  name: opendatahub
+  namespace: opendatahub
+spec:
+  applications:
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: odh-common
+    name: odh-common
+  - kustomizeConfig:
+      parameters:
+      - name: SUPERSET_ADMIN_PASSWORD
+        value: admin
+      repoRef:
+        name: manifests
+        path: superset
+    name: superset
+  - kustomizeConfig:
+      overlays:
+      - additional
+      repoRef:
+        name: manifests
+        path: jupyterhub/notebook-images
+    name: notebook-images
+  - kustomizeConfig:
+      repoRef:
+        name: manifests
+        path: odh-dashboard
+    name: odh-dashboard
+  - kustomizeConfig:
+      repoRef:
+        name: kf-manifests
+        path: apps/jupyter/notebook-controller/upstream
+    name: notebook-controller
+  - kustomizeConfig:
+      repoRef:
+        name: kf-manifests
+        path: apps/profiles/upstream
+    name: profiles
+  - kustomizeConfig:
+      repoRef:
+        name: kf-manifests
+        path: apps/jupyter/jupyter-web-app/upstream
+    name: jupyter-web-app
+  repos:
+  - name: kf-manifests
+    uri: https://github.com/maroroman/manifests/tarball/kfnbc-update
+  - name: manifests
+    uri: https://github.com/opendatahub-io/odh-manifests/tarball/v1.1.1
+status:
+  reposCache:
+  - localPath: '".cache/kf-manifests/maroroman-manifests-e385f25"'
+    name: kf-manifests
+  - localPath: '".cache/manifests/opendatahub-io-odh-manifests-9ada6be"'
+    name: manifests
