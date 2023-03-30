@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: opendatahub
+bases:
+  - ../../odh-common/base
+  - ../../odh-dashboard/base
+  - ../../prometheus/cluster/base
+  - ../../prometheus/operator/base
+  - ../../grafana/cluster/base
+  - ../../grafana/grafana/base
+  - ../../odh-notebook-controller/base
+  - ../../notebook-images/base
+  - ../../model-mesh/base ## TODO: Deal with parameters
+  - ../../modelmesh-monitoring/base
+  - ../../data-science-pipelines/base 
+
+# Overlays
+resources:
+  - ../../model-mesh/overlays/odh-model-controller
+  - ../../data-science-pipelines/overlays/metadata-store-mariadb
+  - ../../data-science-pipelines/overlays/ds-pipeline-ui
+  - ../../data-science-pipelines/overlays/object-store-minio
+  - ../../data-science-pipelines/overlays/default-configs

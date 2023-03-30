@@ -5,16 +5,10 @@ metadata:
 spec:
   applications:
   - kustomizeConfig:
-      parameters:
-      - name: monitoring-namespace
-        value: opendatahub
-      - name: deployment-namespace
-        value: opendatahub
       repoRef:
         name: manifests
-        path: odh-core
+        path: test
   repos:
   - name: manifests
     uri: https://github.com/opendatahub-io/odh-manifests/tarball/master
   version: master
-
