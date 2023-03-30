@@ -3,7 +3,3 @@ kind: Kustomization
 namespace: opendatahub
 bases:
   - ../../notebook-images/base
-
-# Overlays
-resources:
-  - ../../notebook-images/overlays/additional

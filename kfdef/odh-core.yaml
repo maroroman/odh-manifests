@@ -2,9 +2,16 @@ apiVersion: kfdef.apps.kubeflow.org/v1
 kind: KfDef
 metadata:
   name: odh-core
+  namespace: opendatahub
 spec:
   applications:
   - kustomizeConfig:
+      overlays:
+        - odh-model-controller
+        - metadata-store-mariadb
+        - ds-pipeline-ui
+        - object-store-minio
+        - default-configs
       parameters:
       - name: monitoring-namespace
         value: opendatahub
@@ -15,6 +22,6 @@ spec:
         path: odh-core
   repos:
   - name: manifests
-    uri: https://github.com/opendatahub-io/odh-manifests/tarball/master
+    uri: https://github.com/maroroman/odh-manifests/tarball/core-manifest
   version: master
 

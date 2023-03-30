@@ -1,7 +1,8 @@
 apiVersion: kfdef.apps.kubeflow.org/v1
 kind: KfDef
 metadata:
-  name: odh-core
+  name: odh-test
+  namespace: mroman-odh-operator-testing
 spec:
   applications:
   - kustomizeConfig:
@@ -10,5 +11,5 @@ spec:
         path: test
   repos:
   - name: manifests
-    uri: https://github.com/opendatahub-io/odh-manifests/tarball/master
+    uri: https://github.com/maroroman/odh-manifests/tarball/core-manifest
   version: master
